@@ -5,24 +5,20 @@
 }
 
 body {
-  background: #c8c8c8;
+  background: #b0b0b0;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 .calculator {
-  background: #d4d0c8;
-  border-radius: 8px 8px 14px 14px;
-  width: 280px;
-  padding: 12px 10px 16px;
-  box-shadow:
-    2px 2px 0 #fff inset,
-    -2px -2px 0 #888 inset,
-    4px 4px 12px rgba(0,0,0,0.5);
-  border: 2px solid #999;
+  background: #2a2a2a;
+  border-radius: 10px;
+  width: 300px;
+  padding: 14px 12px 18px;
+  box-shadow: 4px 4px 16px rgba(0,0,0,0.6);
 }
 
 /* Header */
@@ -30,65 +26,59 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 8px;
-  padding: 0 4px;
+  margin-bottom: 10px;
+  padding: 0 2px;
 }
 
 .brand {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 900;
-  color: #1a1a6e;
-  letter-spacing: 2px;
+  color: #fff;
+  letter-spacing: 3px;
   font-style: italic;
 }
 
 .model {
   font-size: 11px;
-  color: #1a1a6e;
-  font-weight: bold;
+  color: #aaa;
   margin-left: 6px;
 }
 
 .svpam {
   font-size: 8px;
-  color: #333;
+  color: #888;
   letter-spacing: 1px;
 }
 
 /* Display */
 .display-shell {
-  background: #2a2a2a;
+  background: #111;
   border-radius: 4px;
   padding: 4px;
-  margin-bottom: 10px;
-  box-shadow: inset 2px 2px 6px #000;
+  margin-bottom: 12px;
 }
 
 .display {
-  background: #b5c9a0;
+  background: #a8b8a0;
   border-radius: 2px;
   padding: 6px 8px 8px;
-  min-height: 70px;
-  position: relative;
-  box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3);
+  min-height: 72px;
 }
 
 .indicators {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   margin-bottom: 4px;
-  flex-wrap: wrap;
 }
 
 .ind {
   font-size: 7px;
-  color: #4a6a3a;
+  color: #3a5a2a;
   opacity: 0.2;
   font-weight: bold;
-  transition: opacity 0.1s;
 }
 
-.ind.active {
+.ind.active, .ind[style*="opacity: 1"], .ind[style*="opacity:1"] {
   opacity: 1;
 }
 
@@ -98,29 +88,40 @@ body {
   text-align: right;
   min-height: 16px;
   font-family: 'Courier New', monospace;
-  word-break: break-all;
 }
 
 .result-line {
-  font-size: 22px;
+  font-size: 24px;
   color: #1a3a0a;
   text-align: right;
   font-family: 'Courier New', monospace;
   font-weight: bold;
-  letter-spacing: 1px;
 }
 
-/* Keypad */
+/* Keypads */
 .keypad {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
+  gap: 5px;
+  margin-bottom: 5px;
 }
 
+.sci-keypad {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.nav-keypad {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.num-keypad {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+/* Buttons base */
 .btn {
-  height: 28px;
+  height: 30px;
   border: none;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 10px;
   font-weight: bold;
   cursor: pointer;
@@ -129,52 +130,75 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow:
-    1px 1px 0 #fff inset,
-    -1px -1px 0 #888 inset,
-    2px 2px 3px rgba(0,0,0,0.3);
-  transition: all 0.08s;
-  line-height: 1;
+  transition: filter 0.08s;
 }
 
 .btn:active {
-  box-shadow:
-    -1px -1px 0 #fff inset,
-    1px 1px 0 #888 inset,
-    0px 0px 1px rgba(0,0,0,0.3);
+  filter: brightness(0.85);
   transform: translateY(1px);
 }
 
 .top-label {
   font-size: 6px;
-  color: #e8a000;
+  color: #f0a000;
   position: absolute;
   top: 2px;
   font-weight: normal;
 }
 
-/* Button colours */
-.shift-btn  { background: #e8a000; color: #fff; }
-.alpha-btn  { background: #cc3333; color: #fff; }
-.mode-btn   { background: #b0aca0; color: #222; }
-.on-btn     { background: #b0aca0; color: #222; }
-
-.sci-btn  { background: #c8c4bc; color: #1a1a6e; font-size: 9px; padding-top: 10px; }
-.del-btn  { background: #b0aca0; color: #222; }
-.ac-btn   { background: #b0aca0; color: #222; }
-.nav-btn  { background: #b0aca0; color: #333; font-size: 9px; }
-
-.num-btn { background: #e8e4dc; color: #111; font-size: 13px; height: 32px; }
-.op-btn  { background: #c8c4bc; color: #111; font-size: 12px; height: 32px; }
-.eq-btn  {
-  background: #1a1a6e;
+/* Sci buttons */
+.sci-btn {
+  background: #444;
   color: #fff;
-  font-size: 18px;
+  font-size: 9px;
+  padding-top: 8px;
   height: 32px;
-  grid-row: span 1;
 }
-.red-btn { background: #cc3333; color: #fff; }
+
+/* Top row */
+.shift-btn { background: #e8a000; color: #000; font-size: 9px; }
+.alpha-btn { background: #cc3333; color: #fff; font-size: 9px; }
+.mode-btn  { background: #555; color: #fff; font-size: 9px; }
+.on-btn    { background: #555; color: #fff; font-size: 9px; }
+
+/* Nav row */
+.del-btn { background: #555; color: #fff; font-size: 9px; }
+.ac-btn  { background: #555; color: #fff; font-size: 9px; }
+.nav-btn { background: #444; color: #fff; font-size: 10px; }
+
+/* Number keypad */
+.num-btn {
+  background: #e8e4dc;
+  color: #111;
+  font-size: 15px;
+  font-weight: bold;
+  height: 36px;
+}
+
+.op-btn {
+  background: #666;
+  color: #fff;
+  font-size: 13px;
+  height: 36px;
+}
+
+.eq-btn {
+  background: #3399ff;
+  color: #fff;
+  font-size: 20px;
+  height: 36px;
+  grid-row: span 2;
+  align-self: stretch;
+  height: auto;
+}
+
+.red-btn {
+  background: #cc3333;
+  color: #fff;
+  font-size: 11px;
+  height: 36px;
+}
 
 .zero-btn {
   grid-column: span 2;
-  }
+}
