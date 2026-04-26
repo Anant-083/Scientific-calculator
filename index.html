@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Casio FX-82MS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="calculator">
+    <div class="calc-header">
+      <div class="header-left">
+        <span class="brand">CASIO</span>
+        <span class="model">fx-82MS</span>
+      </div>
+      <div class="header-right">
+        <span class="svpam">S-V.P.A.M.</span>
+      </div>
+    </div>
+
+    <div class="display-shell">
+      <div class="display">
+        <div class="indicators">
+          <span class="ind" id="ind-shift">S</span>
+          <span class="ind" id="ind-alpha">A</span>
+          <span class="ind" id="ind-deg">DEG</span>
+          <span class="ind" id="ind-rad">RAD</span>
+          <span class="ind" id="ind-fix">FIX</span>
+          <span class="ind" id="ind-sci">SCI</span>
+        </div>
+        <div id="expr-line" class="expr-line"></div>
+        <div id="result-line" class="result-line">0</div>
+      </div>
+    </div>
+
+    <div class="keypad">
+      <!-- Row 1 -->
+      <button class="btn shift-btn" onclick="pressShift()">SHIFT</button>
+      <button class="btn alpha-btn" onclick="pressAlpha()">ALPHA</button>
+      <button class="btn mode-btn" onclick="pressMode()">MODE</button>
+      <button class="btn on-btn" onclick="pressAC()">ON</button>
+
+      <!-- Row 2 -->
+      <button class="btn sci-btn" onclick="insertFunc('Math.sqrt(')">
+        <span class="top-label">x³</span>√
+      </button>
+      <button class="btn sci-btn" onclick="insertFunc('sq(')">
+        <span class="top-label">x⁻¹</span>x²
+      </button>
+      <button class="btn sci-btn" onclick="insertFunc('pow(')">
+        <span class="top-label">alog</span>xʸ
+      </button>
+      <button class="btn sci-btn" onclick="insertFunc('log10(')">
+        <span class="top-label">10ˣ</span>log
+      </button>
+      <button class="btn sci-btn" onclick="insertFunc('ln(')">
+        <span class="top-label">eˣ</span>ln
+      </button>
+
+      <!-- Row 3 -->
+      <button class="btn sci-btn" onclick="insertTrig('sin')">
+        <span class="top-label">sin⁻¹</span>sin
+      </button>
+      <button class="btn sci-btn" onclick="insertTrig('cos')">
+        <span class="top-label">cos⁻¹</span>cos
+      </button>
+      <button class="btn sci-btn" onclick="insertTrig('tan')">
+        <span class="top-label">tan⁻¹</span>tan
+      </button>
+      <button class="btn sci-btn" onclick="insert('(')">
+        <span class="top-label">{</span>(
+      </button>
+      <button class="btn sci-btn" onclick="insert(')')">
+        <span class="top-label">}</span>)
+      </button>
+
+      <!-- Row 4 -->
+      <button class="btn sci-btn" onclick="insert('e')">
+        <span class="top-label">HYP</span>EXP
+      </button>
+      <button class="btn sci-btn" onclick="insert('π')">
+        <span class="top-label">e</span>π
+      </button>
+      <button class="btn sci-btn" onclick="pressAns()">
+        <span class="top-label">RND</span>ANS
+      </button>
+      <button class="btn sci-btn" onclick="toggleDegRad()">
+        <span class="top-label">D»R»G</span>DRG▸
+      </button>
+      <button class="btn sci-btn" onclick="insert('%')">
+        <span class="top-label">M+</span>%
+      </button>
+
+      <!-- Row 5: DEL / AC / arrows -->
+      <button class="btn del-btn" onclick="pressDel()">DEL</button>
+      <button class="btn ac-btn" onclick="pressAC()">AC</button>
+      <button class="btn nav-btn" onclick="moveCursor(-1)">◀</button>
+      <button class="btn nav-btn" onclick="moveCursor(1)">▶</button>
+      <button class="btn nav-btn" onclick="pressUp()">▲</button>
+
+      <!-- Row 6 -->
+      <button class="btn num-btn" onclick="insert('7')">7</button>
+      <button class="btn num-btn" onclick="insert('8')">8</button>
+      <button class="btn num-btn" onclick="insert('9')">9</button>
+      <button class="btn op-btn" onclick="insert('÷')">÷</button>
+      <button class="btn op-btn red-btn" onclick="pressAC()">AC</button>
+
+      <!-- Row 7 -->
+      <button class="btn num-btn" onclick="insert('4')">4</button>
+      <button class="btn num-btn" onclick="insert('5')">5</button>
+      <button class="btn num-btn" onclick="insert('6')">6</button>
+      <button class="btn op-btn" onclick="insert('×')">×</button>
+      <button class="btn op-btn" onclick="insert('-')">−</button>
+
+      <!-- Row 8 -->
+      <button class="btn num-btn" onclick="insert('1')">1</button>
+      <button class="btn num-btn" onclick="insert('2')">2</button>
+      <button class="btn num-btn" onclick="insert('3')">3</button>
+      <button class="btn op-btn" onclick="insert('+')">+</button>
+      <button class="btn eq-btn" onclick="pressEquals()">=</button>
+
+      <!-- Row 9 -->
+      <button class="btn num-btn zero-btn" onclick="insert('0')">0</button>
+      <button class="btn num-btn" onclick="insert('.')">.</button>
+      <button class="btn num-btn" onclick="pressNegate()">(-)</button>
+      <button class="btn op-btn" onclick="insert('×10^')">EXP</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+          </html>
