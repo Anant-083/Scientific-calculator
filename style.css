@@ -5,7 +5,7 @@
 }
 
 body {
-  background: #b0b0b0;
+  background: linear-gradient(135deg, #8a9ba8 0%, #6a7d8a 50%, #8a9ba8 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,11 +14,14 @@ body {
 }
 
 .calculator {
-  background: #2a2a2a;
-  border-radius: 10px;
-  width: 300px;
-  padding: 14px 12px 18px;
-  box-shadow: 4px 4px 16px rgba(0,0,0,0.6);
+  background: linear-gradient(160deg, #2e2e2e 0%, #1e1e1e 100%);
+  border-radius: 14px;
+  width: 310px;
+  padding: 14px 12px 20px;
+  box-shadow:
+    6px 6px 24px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  border: 1px solid #3a3a3a;
 }
 
 /* Header */
@@ -52,50 +55,68 @@ body {
 
 /* Display */
 .display-shell {
-  background: #111;
-  border-radius: 4px;
-  padding: 4px;
+  background: #0a0a0a;
+  border-radius: 6px;
+  padding: 5px;
   margin-bottom: 12px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
 }
 
 .display {
-  background: #a8b8a0;
-  border-radius: 2px;
-  padding: 6px 8px 8px;
-  min-height: 72px;
+  background: #b8c8b0;
+  border-radius: 3px;
+  padding: 6px 8px 10px;
+  min-height: 78px;
+  background: linear-gradient(180deg, #b0c0a8 0%, #a8b8a0 100%);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .indicators {
   display: flex;
   gap: 6px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .ind {
   font-size: 7px;
-  color: #3a5a2a;
+  color: #2a4a1a;
   opacity: 0.2;
   font-weight: bold;
-}
-
-.ind.active, .ind[style*="opacity: 1"], .ind[style*="opacity:1"] {
-  opacity: 1;
+  transition: opacity 0.2s;
 }
 
 .expr-line {
   font-size: 11px;
   color: #3a5a2a;
   text-align: right;
-  min-height: 16px;
+  min-height: 18px;
   font-family: 'Courier New', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cursor {
+  color: #1a3a0a;
+  font-weight: bold;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .result-line {
-  font-size: 24px;
+  font-size: 26px;
   color: #1a3a0a;
   text-align: right;
   font-family: 'Courier New', monospace;
   font-weight: bold;
+  transition: color 0.3s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Keypads */
@@ -121,7 +142,7 @@ body {
 .btn {
   height: 30px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 10px;
   font-weight: bold;
   cursor: pointer;
@@ -130,12 +151,19 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: filter 0.08s;
+  transition: filter 0.08s, transform 0.08s, box-shadow 0.08s;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.4);
+  user-select: none;
+}
+
+.btn:hover {
+  filter: brightness(1.15);
 }
 
 .btn:active {
   filter: brightness(0.85);
-  transform: translateY(1px);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.4);
 }
 
 .top-label {
@@ -144,59 +172,106 @@ body {
   position: absolute;
   top: 2px;
   font-weight: normal;
+  transition: color 0.2s, font-weight 0.2s;
+  pointer-events: none;
 }
 
 /* Sci buttons */
 .sci-btn {
-  background: #444;
+  background: linear-gradient(180deg, #555 0%, #444 100%);
   color: #fff;
   font-size: 9px;
   padding-top: 8px;
   height: 32px;
+  border: 1px solid #333;
 }
 
 /* Top row */
-.shift-btn { background: #e8a000; color: #000; font-size: 9px; }
-.alpha-btn { background: #cc3333; color: #fff; font-size: 9px; }
-.mode-btn  { background: #555; color: #fff; font-size: 9px; }
-.on-btn    { background: #555; color: #fff; font-size: 9px; }
+.shift-btn {
+  background: linear-gradient(180deg, #f0a800 0%, #d09000 100%);
+  color: #000;
+  font-size: 9px;
+  border: 1px solid #a07000;
+}
+
+.alpha-btn {
+  background: linear-gradient(180deg, #dd3333 0%, #bb2222 100%);
+  color: #fff;
+  font-size: 9px;
+  border: 1px solid #881111;
+}
+
+.mode-btn {
+  background: linear-gradient(180deg, #555 0%, #444 100%);
+  color: #fff;
+  font-size: 9px;
+  border: 1px solid #333;
+}
+
+.on-btn {
+  background: linear-gradient(180deg, #555 0%, #444 100%);
+  color: #fff;
+  font-size: 9px;
+  border: 1px solid #333;
+}
 
 /* Nav row */
-.del-btn { background: #555; color: #fff; font-size: 9px; }
-.ac-btn  { background: #555; color: #fff; font-size: 9px; }
-.nav-btn { background: #444; color: #fff; font-size: 10px; }
+.del-btn {
+  background: linear-gradient(180deg, #555 0%, #444 100%);
+  color: #fff;
+  font-size: 9px;
+  border: 1px solid #333;
+}
+
+.ac-btn {
+  background: linear-gradient(180deg, #555 0%, #444 100%);
+  color: #fff;
+  font-size: 9px;
+  border: 1px solid #333;
+}
+
+.nav-btn {
+  background: linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%);
+  color: #fff;
+  font-size: 10px;
+  border: 1px solid #2a2a2a;
+}
 
 /* Number keypad */
 .num-btn {
-  background: #e8e4dc;
+  background: linear-gradient(180deg, #f0ece4 0%, #e0dcd4 100%);
   color: #111;
   font-size: 15px;
   font-weight: bold;
-  height: 36px;
+  height: 38px;
+  border: 1px solid #bbb;
 }
 
 .op-btn {
-  background: #666;
+  background: linear-gradient(180deg, #6a6a6a 0%, #555 100%);
   color: #fff;
   font-size: 13px;
-  height: 36px;
+  height: 38px;
+  border: 1px solid #444;
 }
 
 .eq-btn {
-  background: #3399ff;
+  background: linear-gradient(180deg, #44aaff 0%, #2288dd 100%);
   color: #fff;
-  font-size: 20px;
-  height: 36px;
+  font-size: 22px;
   grid-row: span 2;
   align-self: stretch;
   height: auto;
+  border: 1px solid #1166bb;
+  box-shadow: 0 3px 0 #0a4488;
 }
 
 .red-btn {
-  background: #cc3333;
+  background: linear-gradient(180deg, #dd3333 0%, #bb2222 100%);
   color: #fff;
   font-size: 11px;
-  height: 36px;
+  height: 38px;
+  border: 1px solid #881111;
 }
 
 .zero-btn {
