@@ -20,13 +20,12 @@ body {
   padding: 14px 12px 22px;
   box-shadow:
     0 8px 32px rgba(0,0,0,0.8),
-    0 2px 0 rgba(255,255,255,0.06) inset,
-    0 -4px 12px rgba(0,0,0,0.5) inset;
+    inset 0 2px 0 rgba(255,255,255,0.06),
+    inset 0 -4px 12px rgba(0,0,0,0.5);
   border: 1px solid #444;
   position: relative;
 }
 
-/* Slight texture overlay */
 .calculator::before {
   content: '';
   position: absolute;
@@ -54,7 +53,7 @@ body {
 .brand {
   font-size: 22px;
   font-weight: 900;
-  color: #ffffff;
+  color: #fff;
   letter-spacing: 4px;
   font-style: italic;
 }
@@ -112,7 +111,6 @@ body {
   position: relative;
 }
 
-/* LCD glare */
 .display::after {
   content: '';
   position: absolute;
@@ -191,17 +189,16 @@ body {
   grid-template-columns: repeat(5, 1fr);
 }
 
+.row-top {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .nav-keypad {
   grid-template-columns: repeat(5, 1fr);
 }
 
 .num-keypad {
   grid-template-columns: repeat(5, 1fr);
-}
-
-/* Row-1: only 4 buttons stretched */
-.row-top {
-  grid-template-columns: repeat(4, 1fr);
 }
 
 /* Base button */
@@ -230,7 +227,6 @@ body {
   box-shadow: none !important;
 }
 
-/* Top yellow labels (shift functions) */
 .top-label {
   font-size: 6px;
   color: #e8a000;
@@ -238,13 +234,8 @@ body {
   top: 2px;
   font-weight: normal;
   pointer-events: none;
-  transition: color 0.15s;
   letter-spacing: 0.3px;
-}
-
-.shift-active .top-label {
-  color: #ffe040;
-  font-weight: bold;
+  transition: color 0.15s, font-weight 0.15s;
 }
 
 /* SHIFT */
@@ -285,17 +276,8 @@ body {
   box-shadow: 0 3px 0 #1a1a1a;
 }
 
-/* DEL */
-.del-btn {
-  background: linear-gradient(180deg, #525252 0%, #424242 100%);
-  color: #fff;
-  font-size: 9px;
-  border: 1px solid #303030;
-  box-shadow: 0 3px 0 #1a1a1a;
-}
-
-/* AC (in nav row) */
-.ac-btn {
+/* DEL / AC */
+.del-btn, .ac-btn {
   background: linear-gradient(180deg, #525252 0%, #424242 100%);
   color: #fff;
   font-size: 9px;
@@ -362,10 +344,10 @@ body {
 
 /* Error flash */
 @keyframes errorFlash {
-  0%,100% { background: linear-gradient(180deg, #afc0a8 0%, #a4b59c 100%); }
-  50% { background: linear-gradient(180deg, #d0b0a0 0%, #c0a090 100%); }
+  0%, 100% { background: linear-gradient(180deg, #afc0a8 0%, #a4b59c 100%); }
+  50%       { background: linear-gradient(180deg, #d0b0a0 0%, #c0a090 100%); }
 }
 
 .display.error {
   animation: errorFlash 0.4s ease 2;
-}
+  }
