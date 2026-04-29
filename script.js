@@ -1,20 +1,26 @@
 'use strict';
 
 // ── State ──────────────────────────────────────────────────────────────────
-let expr        = '';
-let ans         = 0;
-let memory      = 0;
-let cursorPos   = 0;
-let shiftOn     = false;
-let alphaOn     = false;
-let angleMode   = 'DEG';   // 'DEG' | 'RAD' | 'GRA'
-let history     = [];
-let historyIdx  = -1;
-let justEvaled  = false;   // after = pressed, next number starts fresh
+let expr       = '';
+let ans        = 0;
+let memory     = 0;
+let cursorPos  = 0;
+let shiftOn    = false;
+let alphaOn    = false;
+let angleMode  = 'DEG';
+let history    = [];
+let historyIdx = -1;
+let justEvaled = false;
 
 const exprLine   = document.getElementById('expr-line');
 const resultLine = document.getElementById('result-line');
-const display    = document.querySelector('.display');
+const displayEl  = document.querySelector('.display');
+
+// ── Indicators ─────────────────────────────────────────────────────────────
+function setInd(id, on) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('active', on);
+}
 
 // ── Display ────────────────────────────────────────────────────────────────
 function updateDisplay() {
@@ -26,7 +32,8 @@ function updateDisplay() {
   const before = escHtml(expr.slice(0, cursorPos));
   const after  = escHtml(expr.slice(cursorPos));
   exprLine.innerHTML = before + '<span class="cursor">|</span>' + after;
-  // Live preview while typing
+
+  // Live preview
   try {
     const preview = evaluate(expr);
     if (preview !== null && expr.length > 1) {
@@ -41,8 +48,7 @@ function escHtml(s) {
 
 // ── Insert / Delete ────────────────────────────────────────────────────────
 function insert(val) {
-  // If just evaluated and user types a digit/function, clear and start fresh
-  if (justEvaled && /^[\d(]/.test(val)) {
+  if (justEvaled && /^[\d.(]/.test(val)) {
     expr = '';
     cursorPos = 0;
   }
@@ -67,16 +73,21 @@ function insertTrig(func) {
   }
 }
 
-// Shift-aware insert: if shift on → shiftVal, else normalVal
 function shiftOrNormal(shiftVal, normalVal) {
   justEvaled = false;
   if (shiftOn) {
-    if (shiftVal === 'insert_e') { insert('e'); }
-    else { insert(shiftVal); }
+    if (shiftVal === 'insert_e') {
+      insert('e');
+    } else {
+      insert(shiftVal);
+    }
     clearShift();
   } else {
-    if (normalVal === 'insert_pi') { insert('π'); }
-    else { insert(normalVal); }
+    if (normalVal === 'insert_pi') {
+      insert('π');
+    } else {
+      insert(normalVal);
+    }
   }
 }
 
@@ -95,7 +106,7 @@ function pressAC() {
   justEvaled = false;
   exprLine.innerHTML = '';
   resultLine.textContent = '0';
-  display.classList.remove('error');
+  displayEl.classList.remove('error');
 }
 
 // ── Cursor / History ───────────────────────────────────────────────────────
@@ -114,7 +125,7 @@ function pressUp() {
   updateDisplay();
 }
 
-// ── Special keys ──────────────────────────────────────────────────────────
+// ── Special Keys ───────────────────────────────────────────────────────────
 function pressAns() {
   insert(formatResult(ans));
 }
@@ -133,7 +144,6 @@ function pressNegate() {
 }
 
 function pressMemory() {
-  // M+ : add result to memory and show M indicator
   try {
     const val = evaluate(expr);
     if (val !== null) {
@@ -149,13 +159,19 @@ function pressShift() {
   alphaOn = false;
   setInd('ind-shift', shiftOn);
   setInd('ind-alpha', false);
-  document.querySelector('.calculator').classList.toggle('shift-active', shiftOn);
+  document.querySelectorAll('.top-label').forEach(el => {
+    el.style.color      = shiftOn ? '#ffe040' : '#e8a000';
+    el.style.fontWeight = shiftOn ? 'bold'    : 'normal';
+  });
 }
 
 function clearShift() {
   shiftOn = false;
   setInd('ind-shift', false);
-  document.querySelector('.calculator').classList.remove('shift-active');
+  document.querySelectorAll('.top-label').forEach(el => {
+    el.style.color      = '#e8a000';
+    el.style.fontWeight = 'normal';
+  });
 }
 
 function pressAlpha() {
@@ -163,11 +179,10 @@ function pressAlpha() {
   shiftOn = false;
   setInd('ind-alpha', alphaOn);
   setInd('ind-shift', false);
-  document.querySelector('.calculator').classList.remove('shift-active');
+  clearShift();
 }
 
 function pressMode() {
-  // MODE just cycles angle for now
   cycleAngleMode();
 }
 
@@ -190,11 +205,6 @@ function cycleAngleMode() {
   }
 }
 
-function setInd(id, on) {
-  const el = document.getElementById(id);
-  if (el) el.classList.toggle('active', on);
-}
-
 // ── Core Evaluator ─────────────────────────────────────────────────────────
 function toRad(val) {
   if (angleMode === 'DEG') return val * Math.PI / 180;
@@ -211,50 +221,33 @@ function fromRad(val) {
 function evaluate(raw) {
   let e = raw;
 
-  // Display symbols → JS
   e = e.replace(/÷/g, '/');
   e = e.replace(/×/g, '*');
   e = e.replace(/−/g, '-');
   e = e.replace(/π/g, 'Math.PI');
 
-  // Scientific notation: ×10^
+  // Scientific notation ×10^
   e = e.replace(/\*10\^(-?\d+(\.\d+)?)/g, '*Math.pow(10,$1)');
 
-  // Standalone e → Euler
+  // Standalone e → Euler's number
   e = e.replace(/\be\b/g, 'Math.E');
 
   // Percentage
   e = e.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
 
-  // Factorial
-  e = e.replace(/fact\(([^)]+)\)/g, (_,n) => `_fact(${n})`);
-
-  // pow10(x) = 10^x
+  // Special functions
+  e = e.replace(/fact\(([^)]+)\)/g,  '(_fact($1))');
   e = e.replace(/pow10\(([^)]+)\)/g, 'Math.pow(10,$1)');
+  e = e.replace(/\bexp\(/g,          'Math.exp(');
+  e = e.replace(/sq\(([^)]+)\)/g,    'Math.pow($1,2)');
+  e = e.replace(/inv\(([^)]+)\)/g,   '(1/($1))');
+  e = e.replace(/\bcbrt\(/g,         'Math.cbrt(');
+  e = e.replace(/\bpow\(/g,          'Math.pow(');
+  e = e.replace(/\blog10\(/g,        'Math.log10(');
+  e = e.replace(/\bln\(/g,           'Math.log(');
+  e = e.replace(/\bsqrt\(/g,         'Math.sqrt(');
 
-  // exp(x) = e^x
-  e = e.replace(/\bexp\(/g, 'Math.exp(');
-
-  // sq(x) = x²
-  e = e.replace(/sq\(([^)]+)\)/g, 'Math.pow($1,2)');
-
-  // inv(x) = 1/x
-  e = e.replace(/inv\(([^)]+)\)/g, '(1/($1))');
-
-  // cbrt
-  e = e.replace(/\bcbrt\(/g, 'Math.cbrt(');
-
-  // pow(x,y)
-  e = e.replace(/\bpow\(/g, 'Math.pow(');
-
-  // log10 / ln
-  e = e.replace(/\blog10\(/g, 'Math.log10(');
-  e = e.replace(/\bln\(/g, 'Math.log(');
-
-  // sqrt
-  e = e.replace(/\bsqrt\(/g, 'Math.sqrt(');
-
-  // Trig: inverse first (avoid re-matching)
+  // Trig — inverse before forward to avoid double-matching
   if (angleMode !== 'RAD') {
     e = e.replace(/\basin\(/g, '_asin(');
     e = e.replace(/\bacos\(/g, '_acos(');
@@ -271,8 +264,9 @@ function evaluate(raw) {
     e = e.replace(/\btan\(/g,  'Math.tan(');
   }
 
-  const helpers = `
-    const toRad  = ${toRad.toString()};
+  const code = `
+    "use strict";
+    const toRad   = ${toRad.toString()};
     const fromRad = ${fromRad.toString()};
     const _sin  = x => Math.sin(toRad(x));
     const _cos  = x => Math.cos(toRad(x));
@@ -280,11 +274,17 @@ function evaluate(raw) {
     const _asin = x => fromRad(Math.asin(x));
     const _acos = x => fromRad(Math.acos(x));
     const _atan = x => fromRad(Math.atan(x));
-    const _fact = n => { n = Math.round(n); if(n<0||n>170) return Infinity; let r=1; for(let i=2;i<=n;i++)r*=i; return r; };
+    const _fact = n => {
+      n = Math.round(n);
+      if (n < 0 || n > 170) return Infinity;
+      let r = 1;
+      for (let i = 2; i <= n; i++) r *= i;
+      return r;
+    };
+    return (${e});
   `;
 
-  const result = Function('"use strict";' + helpers + 'return (' + e + ')')();
-
+  const result = Function(code)();
   if (typeof result !== 'number' || isNaN(result) || !isFinite(result)) return null;
   return result;
 }
@@ -292,23 +292,18 @@ function evaluate(raw) {
 // ── Equals ─────────────────────────────────────────────────────────────────
 function pressEquals() {
   if (!expr.trim()) return;
-
   try {
     const result = evaluate(expr);
-
-    if (result === null) {
-      showError('Math ERROR');
-      return;
-    }
+    if (result === null) { showError('Math ERROR'); return; }
 
     ans = result;
     history.push(expr);
     historyIdx = -1;
 
-    const display_str = formatResult(result);
-    exprLine.textContent = expr;
-    resultLine.textContent = display_str;
-    expr = display_str;
+    const str = formatResult(result);
+    exprLine.textContent    = expr;
+    resultLine.textContent  = str;
+    expr      = str;
     cursorPos = expr.length;
     justEvaled = true;
 
@@ -330,14 +325,14 @@ function formatResult(n) {
 function showError(msg) {
   resultLine.textContent = msg;
   resultLine.style.color = '#8a1a00';
-  display.classList.add('error');
+  displayEl.classList.add('error');
   setTimeout(() => {
     resultLine.style.color = '';
-    display.classList.remove('error');
+    displayEl.classList.remove('error');
   }, 1200);
 }
 
-// ── Keyboard Support ───────────────────────────────────────────────────────
+// ── Keyboard ───────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key >= '0' && e.key <= '9') insert(e.key);
@@ -349,7 +344,6 @@ document.addEventListener('keydown', e => {
   else if (e.key === '(') insert('(');
   else if (e.key === ')') insert(')');
   else if (e.key === '%') insert('%');
-  else if (e.key === '^') insert('^');
   else if (e.key === 'Enter') pressEquals();
   else if (e.key === 'Backspace') pressDel();
   else if (e.key === 'Escape') pressAC();
